@@ -1597,7 +1597,7 @@
       </div>
       <div class="agreement-actions">
         <button type="button" class="btn-cta" id="signBtn">Greenlight The Standard →</button>
-        <a href="mailto:charlie@tillettfilm.com?subject=Re: The First Cut — Derek Rowe" class="btn-cta ghost">Reply With Questions</a>
+        <a href="mailto:charlie@tillettfilm.com?subject=Re: The First Cut — Derek Rowe" class="btn-cta ghost" id="replyBtn">Reply With Questions</a>
       </div>
 
       <div class="agreement-signature">
@@ -1799,29 +1799,8 @@
 
   function playClosingReel() {
     if (!closingReel) return;
-    let useVideo = false;
-    if (closingReelVideo && closingReelVideo.querySelector('source')) {
-      useVideo = closingReelVideo.readyState >= 1 || (closingReelVideo.networkState !== 3);
-    }
-    if (!useVideo) closingReel.classList.add('no-video');
-    closingReel.classList.add('visible');
-    if (useVideo) {
-      closingReelVideo.muted = false;
-      const playPromise = closingReelVideo.play();
-      if (playPromise) {
-        playPromise.catch(() => {
-          closingReelVideo.muted = true;
-          closingReelVideo.play().catch(() => {
-            closingReel.classList.add('no-video');
-            setTimeout(() => closingReel.classList.add('show-text'), 1000);
-          });
-        });
-      }
-      closingReelVideo.addEventListener('ended', () => closingReel.classList.add('show-text'));
-      setTimeout(() => closingReel.classList.add('show-text'), 1000);
-    } else {
-      setTimeout(() => closingReel.classList.add('show-text'), 1000);
-    }
+    closingReel.classList.add('no-video', 'visible');
+    setTimeout(() => closingReel.classList.add('show-text'), 400);
   }
 
   closingReelClose?.addEventListener('click', () => {
@@ -1852,6 +1831,10 @@
       const src = thumb.dataset.video;
       if (src) openLightbox(src);
     });
+  });
+
+  document.getElementById('replyBtn')?.addEventListener('click', () => {
+    playClosingReel();
   });
 
   signBtn?.addEventListener('click', () => {
