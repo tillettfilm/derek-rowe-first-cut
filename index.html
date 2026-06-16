@@ -1832,8 +1832,31 @@
     });
   });
 
-  document.getElementById('replyBtn')?.addEventListener('click', () => {
+  document.getElementById('replyBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const emailInput = document.getElementById('greenlightEmail');
+    const emailError = document.getElementById('greenlightError');
+    const email = emailInput?.value.trim() || '';
+    if (!email) {
+      emailError.style.display = 'block';
+      emailInput.style.borderColor = '#c0392b';
+      emailInput.focus();
+      return;
+    }
+    emailError.style.display = 'none';
+    emailInput.style.borderColor = '';
     playClosingReel();
+    fetch('https://formspree.io/f/mzdqwzzn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        subject: 'Derek Rowe: Has Questions',
+        message: 'Derek Rowe clicked Reply With Questions. Follow up to address any concerns before greenlighting.',
+        email: email,
+        _replyto: email
+      })
+    }).catch(() => {});
+    window.location.href = 'mailto:charlie@tillettfilm.com?subject=Re: The First Cut — Derek Rowe';
   });
 
   signBtn?.addEventListener('click', () => {
